@@ -1,0 +1,7 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php/$1 [L]
+RewriteCond %{HTTP_HOST} ^monitoring\.binainsani\.ac\.id$
+RewriteRule ^/?$ "https\:\/\/monitoring1\.binainsani\.ac\.id\/" [R=301,L]
+
