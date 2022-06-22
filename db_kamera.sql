@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Waktu pembuatan: 22 Jun 2022 pada 22.41
+-- Waktu pembuatan: 22 Jun 2022 pada 23.06
 -- Versi server: 5.7.33
 -- Versi PHP: 7.4.19
 
@@ -84,7 +84,9 @@ INSERT INTO `history_karyawan` (`id`, `nama`, `info`, `tanggal`) VALUES
 (573, 'admin', 'admin Telah melakukan login', '23/06/2022 01:27:36'),
 (574, 'admin', 'admin Telah melakukan login', '23/06/2022 04:10:56'),
 (575, 'admin', 'admin Telah melakukan login', '23/06/2022 04:18:53'),
-(576, 'admin', 'admin Telah melakukan login', '23/06/2022 05:34:25');
+(576, 'admin', 'admin Telah melakukan login', '23/06/2022 05:34:25'),
+(577, 'admin', 'admin Telah melakukan login', '23/06/2022 05:42:59'),
+(578, 'admin', 'admin Telah melakukan login', '23/06/2022 05:43:18');
 
 -- --------------------------------------------------------
 
@@ -176,9 +178,7 @@ CREATE TABLE `tbl_member` (
 --
 
 INSERT INTO `tbl_member` (`member_id`, `username`, `ktp`, `nama_member`, `jk_kelamin`, `no_hp`, `alamat`, `password`) VALUES
-(8, '123', '123456789', 'Muhammad Saeful Ramdan', 'Laki-Laki', '083874731480', 'Bogor', '202cb962ac59075b964b07152d234b70'),
-(10, '9090', '123456789', 'ramdan', 'Perempuan', '12345678', 'Bogor', '38f629170ac3ab74b9d6d2cc411c2f3c'),
-(11, 'ramdan', '23456789', 'Muhammad Saeful Ramdan', 'Laki-Laki', '083874731480', 'Bogor', '889752dcb81b4ad98ad6e36e9db2cd43');
+(8, '1234', '123456789', 'Muhammad Saeful Ramdan', 'Laki-Laki', '083874731480', 'Bogor', '81dc9bdb52d04dc20036dbd8313ed055');
 
 -- --------------------------------------------------------
 
@@ -201,9 +201,7 @@ CREATE TABLE `tbl_sewa` (
 --
 
 INSERT INTO `tbl_sewa` (`sewa_id`, `kode_sewa`, `member_id`, `tanggal_req`, `tanggal_sewa`, `users_id`, `grand_total`) VALUES
-(52, 'SW0001', 10, '2022-06-23', '2022-06-23', 2, 8177),
-(57, 'SW0002', 10, '2022-06-23', '2022-06-23', 2, 81),
-(58, 'SW0003', 10, '2022-06-23', '2022-06-23', 2, 81);
+(59, 'SW0001', 8, '2022-06-23', NULL, NULL, 81);
 
 -- --------------------------------------------------------
 
@@ -227,11 +225,7 @@ CREATE TABLE `tbl_sewa_detail` (
 --
 
 INSERT INTO `tbl_sewa_detail` (`sewa_detail_id`, `sewa_id`, `kamera_id`, `harga`, `total`, `tanggal_sewa`, `lama_sewa`, `tanggal_kembali`) VALUES
-(71, 52, 10, 96, 96, '2022-06-23', 1, '2022-06-23'),
-(72, 52, 9, 8000, 8000, '2022-06-23', 1, '2022-06-23'),
-(73, 52, 11, 81, 81, '2022-06-23', 1, '2022-06-23'),
-(84, 57, 11, 81, 81, '2022-06-23', 1, NULL),
-(85, 58, 11, 81, 81, '2022-06-23', 1, NULL);
+(86, 59, 11, 81, 81, NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -269,14 +263,6 @@ CREATE TABLE `wishlist` (
   `member_id` int(11) NOT NULL,
   `id_kamera` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data untuk tabel `wishlist`
---
-
-INSERT INTO `wishlist` (`wishlist_id`, `member_id`, `id_kamera`) VALUES
-(14, 10, 9),
-(17, 11, 10);
 
 --
 -- Indexes for dumped tables
@@ -350,7 +336,7 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT untuk tabel `history_karyawan`
 --
 ALTER TABLE `history_karyawan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=577;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=579;
 
 --
 -- AUTO_INCREMENT untuk tabel `tbl_biaya_denda`
@@ -380,13 +366,13 @@ ALTER TABLE `tbl_member`
 -- AUTO_INCREMENT untuk tabel `tbl_sewa`
 --
 ALTER TABLE `tbl_sewa`
-  MODIFY `sewa_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `sewa_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT untuk tabel `tbl_sewa_detail`
 --
 ALTER TABLE `tbl_sewa_detail`
-  MODIFY `sewa_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+  MODIFY `sewa_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`

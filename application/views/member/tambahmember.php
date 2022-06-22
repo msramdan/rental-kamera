@@ -9,6 +9,12 @@
 <form action="<?php echo base_url(); ?>member/simpan_member" method="post" enctype="multipart/form-data" role="form">
 	<div class="box-body">
 		<div class="form-group">
+			<label for="username">Username</label>
+			<input required="" type="text" class="form-control" name="username" id="username" placeholder="" value="<?= set_value('username') ?>">
+			<div class="warna"><?php echo form_error('username'); ?></div>
+		</div>
+
+		<div class="form-group">
 			<label for="exampleInputEmail1">No KTP</label>
 			<input required="" type="text" class="form-control" name="ktp" id="ktp" placeholder="" value="<?= set_value('ktp') ?>">
 			<div class="warna"><?php echo form_error('ktp'); ?></div>

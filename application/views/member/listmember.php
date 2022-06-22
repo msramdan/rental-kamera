@@ -5,6 +5,7 @@
 				<a href="<?php echo base_url(); ?>member/adddata" class="btn btn-primary" style="margin-bottom:20px; "><i class="fa fa-plus"></i>Tambah Member</a>
 				<tr>
 					<th>No</th>
+					<th>Username</th>
 					<th>No KTP</th>
 					<th>Nama Member</th>
 					<th>Jenis Kelamin</th>
@@ -19,6 +20,7 @@
 
 					<tr>
 						<td><?php echo $no; ?></td>
+						<td><?php echo $rows['username']; ?></td>
 						<td><?php echo $rows['ktp']; ?></td>
 						<td><?php echo $rows['nama_member']; ?> </td>
 						<td><?php echo $rows['jk_kelamin']; ?> </td>
