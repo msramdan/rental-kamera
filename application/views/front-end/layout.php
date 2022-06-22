@@ -239,3 +239,34 @@
 		});
 	});
 </script>
+
+<script type="text/javascript">
+	$(document).on('click', '#detailtransaksi', function() {
+		var sewa_id = $(this).data('sewa_id');
+		var kode_sewa = $(this).data('kode_sewa');
+		var nama_member = $(this).data('nama_member');
+		var tanggal_sewa = $(this).data('tanggal_sewa');
+		var tanggal_req = $(this).data('tanggal_req');
+		var username = $(this).data('username');
+		var grand_total = $(this).data('grand_total');
+		$('#modal-default #kode_sewa').text(kode_sewa);
+		$('#modal-default #nama_member').text(nama_member);
+		$('#modal-default #tanggal_sewa').text(tanggal_sewa);
+		$('#modal-default #tanggal_req').text(tanggal_req);
+		$('#modal-default #username').text(username);
+		$('#modal-default #grand_total').text(grand_total);
+
+		$.ajax({
+			url: '<?= base_url() ?>transaksi/getByIdUser/' + sewa_id,
+			type: 'GET',
+			data: {},
+			success: function(html) {
+				$("#result").html(html);
+				$("#result_tunggu").html('');
+			}
+		});
+
+
+	})
+</script>
+

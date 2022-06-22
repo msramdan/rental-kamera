@@ -139,6 +139,96 @@ class Transaksi extends CI_Controller
 		echo $output;
 	}
 
+	public function getByIdUser($id)
+	{
+		$data = $this->db->query("SELECT * from tbl_sewa_detail
+        join tbl_kamera on tbl_kamera.id_kamera=tbl_sewa_detail.kamera_id 
+        where tbl_sewa_detail.sewa_id='$id'");
+
+		// denda
+		$no = 1;
+		$denda = $this->db->query("SELECT * FROM tbl_biaya_denda WHERE id_biaya_denda  = 1");
+		$dataDenda = $denda->row();
+		$valueDenda = $dataDenda->harga_denda;
+		// end denda
+
+		$output = '';
+		$output .= '<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Nama Barang</th>
+				<th>Total</th>
+				<th>Lama Sewa</th>
+				<th>Tanggal Sewa</th>
+				<th>Tanggal Kembali</th>
+				<th>Status Pengembelian</th>
+				<th><span style="color: red;">Keterlambatan</span> </th>
+				<th><span style="color: red;">Denda</span> </th>
+            </tr>
+        </thead>
+        <tbody>';
+		foreach ($data->result() as $row) {
+			$tgl1    = $row->tanggal_sewa;
+			if ($tgl1 == null || $tgl1 == '') {
+				$data1 = '-';
+				$data2 = '-';
+				$x = '-';
+				$y = '-';
+				$row->tanggal_sewa = '-';
+				$tanggalHarusKembali = '-';
+			} else {
+				$dateNow = date('Y-m-d');
+				$lama = $row->lama_sewa;
+				$x = '+' . $lama . ' days';
+				$tanggalHarusKembali    = date('Y-m-d', strtotime($x, strtotime($tgl1)));
+
+				$cek = $tanggalHarusKembali < $dateNow;
+				if ($row->tanggal_kembali == null && $tanggalHarusKembali < $dateNow) {
+					$tgl1 = strtotime($tanggalHarusKembali);
+					$tgl2 = strtotime($dateNow);
+					$jarak = $tgl2 - $tgl1;
+					$keterlambatanHari = $jarak / 60 / 60 / 24;
+					$data1 = $keterlambatanHari;
+					$data2 = rupiah($keterlambatanHari * $valueDenda) ;
+				} else if ($row->tanggal_kembali != null && $tanggalHarusKembali < $row->tanggal_kembali) {
+					$tgl1 = strtotime($tanggalHarusKembali);
+					$tgl2 = strtotime($row->tanggal_kembali);
+					$jarak = $tgl2 - $tgl1;
+					$keterlambatanHari = $jarak / 60 / 60 / 24;
+					$data1 = $keterlambatanHari;
+					$data2 =rupiah($keterlambatanHari * $valueDenda) ;
+				} else if ($row->tanggal_kembali != null && $tanggalHarusKembali >= $row->tanggal_kembali) {
+					$data1 = 'Tidak Ada Keterlambatan';
+					$data2 = 'Tidak Ada';
+				} else {
+					$data1 = '-';
+					$data2 = '-';
+				}
+				if ($row->tanggal_kembali == null) {
+					$x = '-';
+					$y = 'Belum';
+				} else {
+					$x = $row->tanggal_kembali;
+					$y = 'Sudah';
+				}
+			}
+			$output .= '<tr>
+            <td>' . $row->nama_kamera . '</td>
+			<td>' . rupiah($row->total) . '</td>
+			<td>' . $row->lama_sewa . ' Hari</td>
+			<td>' . $row->tanggal_sewa . ' s.d ' . $tanggalHarusKembali . '</td>
+			<td>' . $x . '</td>
+			<td>' . $y . '</td>
+			<td>' . $data1 . ' Hari</td>
+			<td>' . $data2 . '</td>';
+			$output .= '</tr>';
+		}
+
+		$output .= '</tbody>
+        </table>';
+		echo $output;
+	}
+
 	public function updateItemStatus($id)
 	{
 		$data = array(
