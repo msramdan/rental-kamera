@@ -1,251 +1,490 @@
-
 <div class="box-header with-border">
-  <h3 class="box-title">Tambah Pinjam</h3>
+	<h3 class="box-title">Transaksi Penyewaan</h3>
 </div>
-  <form action="<?php echo base_url(); ?>transaksi/prosespinjam" method="post" enctype="multipart/form-data" role="form">
-    <div class="box-body">
-      <div class="form-group" style="background: yellowgreen">
-        <h3>Data Transaksi</h3>
-      </div>
-      <div class="form-group">
-        <label for="nopinjam">No Peminjaman</label>
-        <input type="" class="form-control" name="nopinjam" id="nopinjam" required="" value="<?= $kodeunik; ?>" readonly>
-      </div>
-      <div class="form-group">
-        <label for="tgl">Tanggal Pinjam</label>
-        <input type="date" class="form-control" name="tgl" id="tgl" placeholder="ex.Bahasa"  required="">
-      </div>
-      <div class="form-group">
-        <label for="ina">ID Anggota</label>
-          <div class="input-group">
-            <input type="text" class="form-control" required autocomplete="off" name="anggota_id" id="search-box" placeholder="Contoh ID Anggota : AG0001" type="text" value="">
-            <span class="input-group-btn">
-              <a data-toggle="modal" data-target="#TableAnggota" class="btn btn-primary"><i class="fa fa-search"></i></a>
-            </span>
-          </div>
-      </div>
-       <div class="form-group">
-        <label for="ina">Biodata</label>
-          <div id="result_tunggu"> <p style="color:red">* Belum Ada Hasil</p></div>
-          <div id="result"></div>
-      </div>
-      <div class="form-group">
-        <label for="lama">Lama Minjam</label>
-        <input type="number" class="form-control" name="lama" id="lama" placeholder="Lama Pinjam Contoh : 2 Hari (2)"  required="">
-      </div>
+<form action="" method="POST" id="form-purchase">
+	<div class="box-body">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="exampleInputEmail1">Kode Penyewaan</label>
+				<input class="form-control" id="kode_sewa" type="text" value="<?= $kode ?>" name="kode_sewa" autocomplete="off" readonly>
+			</div>
+			<div class="form-group">
+				<div class="row">
+					<div class="col-md-6">
+						<label for="exampleInputEmail1">Tanggal Awal Penyewaan</label>
+						<input class="form-control" id="tanggal_sewa" type="date" value="" name="tanggal_sewa" autocomplete="off">
+					</div>
+					<div class="col-md-6">
+						<label for="exampleInputEmail1">Lama Penyewaan (Hari)</label>
+						<input class="form-control" id="lama_sewa" type="number" value="" min="0" name="lama_sewa" autocomplete="off">
+					</div>
+				</div>
+			</div>
 
-        <div class="form-group" style="background: yellowgreen">
-        <h3>Pinjam Buku</h3>
-      </div>
-        <div class="form-group">
-        <label for="buku_id">Kode Buku</label>
-          <div class="input-group">
-                        <input type="text" class="form-control" autocomplete="off" name="buku_id" id="buku-search" placeholder="Contoh ID Buku : BK001" type="text" value="">
-                        <span class="input-group-btn">
-                          <a data-toggle="modal" data-target="#TableBuku" class="btn btn-primary"><i class="fa fa-search"></i></a>
-                        </span>
-                      </div>
-                    </div>
-       <div class="form-group">
-        <label for="ina">Data Buku</label>
-          <div id="result_tunggu_buku"> <p style="color:red">* Belum Ada Hasil</p></div>
-          <div id="result_buku"></div>
-      </div>
-    </div>
-    <div class="box-footer">
-      <div class="pull-right">
-              <input type="hidden" name="tambah" value="tambah">
-              <button type="submit" class="btn btn-primary btn-md">Submit</button> 
-                    
-              <a href="<?= base_url('transaksi');?>" class="btn btn-danger btn-md">Kembali</a>
-            </div>
-    </div>
-  </form>
+		</div>
 
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="exampleInputEmail1">Member</label>
+				<select class="form-control" name="member_id" id="member_id">
+					<option value="" disabled selected>-- Pilih --</option>
+					<?php foreach ($member as $rows) { ?>
+						<option value="<?php echo $rows['member_id']; ?>"><?php echo $rows['nama_member']; ?></option>
+					<?php } ?>
+				</select>
+			</div>
+			<div class="form-group">
+				<div class="row">
+					<div class="col-md-6">
+						<label for="exampleInputEmail1">Daftar Barang</label>
+						<input type="hidden" name="kode_kamera" id="kode_kamera">
+						<input type="hidden" name="nama_kamera" id="nama_kamera">
+						<input type="hidden" name="index_tr" id="index-tr">
 
+						<select class="form-control" name="kamera" id="kamera">
+							<option value="" disabled selected>-- Pilih --</option>
+							<?php foreach ($kamera as $rows) { ?>
+								<option value="<?php echo $rows['id_kamera']; ?>"><?php echo $rows['nama_kamera']; ?></option>
+							<?php } ?>
+						</select>
+					</div>
+					<div class="col-md-6">
+						<label for="exampleInputEmail1">Harga Sewa/hari</label>
+						<input type="number" id="harga" name="harga" class="form-control" placeholder="">
+					</div>
+				</div>
+			</div>
 
-  <!-- start Modal Anggota -->
-  <div class="modal fade" id="TableAnggota">
-  <div class="modal-dialog" style="width:80%;">
-  <div class="modal-content">
-  <div class="modal-header">
-  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-  <span aria-hidden="true">&times;</span></button>
-  <h4 class="modal-title">Daftar Anggota</h4>
-  </div>
-  <div id="modal_body" class="modal-body fileSelection1">
-  <div class="box-body" style="overflow-x: scroll; ">
-  <table id="example1" class="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <th>No</th>
-        <th>ID Anggota</th>
-        <th>Nama</th>
-        <th>Telepon</th>
-        <th>Email</th>
-        <th>Aksi</th>
-      </tr>
-    </thead>
-    <tbody>
-    <?php $no=1;foreach($user as $isi){
-      if($isi['level'] == 'U'){ ?>
-      <tr>
-        <td><?= $no;?></td>
-        <td><?= $isi['anggota_id'];?></td>
-        <td><?= $isi['nama'];?></td>
-        <td><?= $isi['telepon'];?></td>
-        <td><?= $isi['email'];?></td>
-        <td style="width:20%;">
-          <button class="btn btn-primary" id="Select_File1" data_id="<?= $isi['anggota_id'];?>">
-          <i class="fa fa-check"> </i> Pilih
-          </button>
-        </td>
-      </tr>
-    <?php $no++;}}?>
-   
-    </table>
-  </div>
-</div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
-  </div>
-  </div>
-  </div>
-  </div>
-    <!-- End Modal Anggota -->
+			<div class="form-group">
+				<div class="input-group input-group">
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-info pull-right" id="btn-add"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Add</button>
+						<button type="button" class="btn btn-success pull-right" id="btn-update" style="display: none;"><i class="fa fa-save" aria-hidden="true"></i> Update</button>
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<table class="table table-hover table-bordered table-sm mt-3" id="tbl-cart">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Nama Kamera</th>
+						<th>Harga Sewa/hari</th>
+						<th>Lama Sewa</th>
+						<th>Total Harga Sewa</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
 
-  <script>
-  $(".fileSelection1 #Select_File1").click(function (e) {
-    document.getElementsByName('anggota_id')[0].value = $(this).attr("data_id");
-    $('#TableAnggota').modal('hide');
-    $.ajax({
-      type: "POST",
-      url: "<?php echo base_url('transaksi/result');?>",
-      data:'kode_anggota='+$(this).attr("data_id"),
-      beforeSend: function(){
-        $("#result").html("");
-        $("#result_tunggu").html('<p style="color:green"><blink>tunggu sebentar</blink></p>');
-      },
-      success: function(html){
-        $("#result").html(html);
-        $("#result_tunggu").html('');
-      }
-    });
-  });
-  </script>
-    <script>
-  // AJAX call for autocomplete 
-  $(document).ready(function(){
-    $("#search-box").keyup(function(){
-      $.ajax({
-        type: "POST",
-        url: "<?php echo base_url('transaksi/result');?>",
-        data:'kode_anggota='+$(this).val(),
-        beforeSend: function(){
-          $("#result").html("");
-          $("#result_tunggu").html('<p style="color:green"><blink>tunggu sebentar</blink></p>');
-        },
-        success: function(html){
-          $("#result").html(html);
-          $("#result_tunggu").html('');
-        }
-      });
-    });
-  });
-  </script>
-
-  <!-- MOdal Buku -->
-<div class="modal fade" id="TableBuku">
-<div class="modal-dialog" style="width:80%;">
-<div class="modal-content">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span></button>
-<h4 class="modal-title">Add Buku</h4>
-</div>
-<div id="modal_body" class="modal-body fileSelection1">
-<table id="example3" class="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <th>No</th>
-        <th>kode Buku</th>
-        <th>ISBN</th>
-        <th>Title</th>
-        <th>Penerbit</th>
-        <th>Tahun Buku</th>
-        <th>Stok Buku</th>
-        <th>Tanggal Masuk</th>
-        <th>Aksi</th>
-      </tr>
-    </thead>
-    <tbody>
-    <?php $no=1;foreach($buku->result_array() as $isi){?>
-      <tr>
-        <td><?= $no;?></td>
-        <td><?= $isi['buku_id'];?></td>
-        <td><?= $isi['isbn'];?></td>
-        <td><?= $isi['title'];?></td>
-        <td><?= $isi['penerbit'];?></td>
-        <td><?= $isi['thn_buku'];?></td>
-        <td><?= $isi['jml'];?></td>
-        <td><?= $isi['tgl_masuk'];?></td>
-        <td style="width:17%">
-        <button class="btn btn-primary" id="Select_File2" data_id="<?= $isi['buku_id'];?>">
-          <i class="fa fa-check"> </i> Pilih
-        </button>
-        <a href="<?php echo base_url(); ?>buku/view_buku/<?php echo $isi['id_buku']; ?>" target="_blank">
-          <button class="btn btn-success"><i class="fa fa-sign-in"></i> Detail</button></a>
-        </td>
-      </tr>
-    <?php $no++;}?>
-    </tbody>
-  </table>
-</div>
-<div class="modal-footer">
-  <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
-</div>
-</div>
-<!-- /.modal-content -->
-</div>
-<!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
+		<div class="col-md-4">
+			<div class="form-group">
+				<div class="row">
+					<div class="col-md-6">
+						<label for="exampleInputEmail1">Total</label>
+						<input class="form-control" id="total" type="text" value="" placeholder="" name="total" autocomplete="off" disabled="">
+					</div>
+					<div class="col-md-6">
+						<label for="exampleInputEmail1">Diskon</label>
+						<input class="form-control" id="diskon" type="number" value="" placeholder="" min="1" name="diskon" autocomplete="off">
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="exampleInputEmail1">Grand Total</label>
+				<input class="form-control" id="grand-total" type="text" value="" placeholder="" name="grand-total" autocomplete="off" readonly>
+				<input type="hidden" id="grand-total-hidden" name="grand_total_hidden" value="">
+				<input type="hidden" id="total-hidden" name="total_hidden" value="">
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group">
+				<label for="exampleInputEmail1">Catatan</label>
+				<textarea class="form-control" id="catatan" type="text" rows="5" value="" placeholder="" name="catatan" autocomplete="off"></textarea>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group">
+				<button type="submit" style="margin-top:25px;" class="btn btn-primary" id="btn-save" disabled=""><i class="fa fa-save" aria-hidden="true"></i> Simpan Transaksi</button>
+				<a href="<?= base_url() ?>transaksi" type="submit" style="margin-top:25px;" class="btn btn-warning"><i class="fa fa-refresh" aria-hidden="true"></i> Cancel</a>
+			</div>
+		</div>
+	</div>
+</form>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 <script>
-  $(".fileSelection1 #Select_File2").click(function (e) {
-    document.getElementsByName('buku_id')[0].value = $(this).attr("data_id");
-    $('#TableBuku').modal('hide');
-    $.ajax({
-      type: "POST",
-      url: "<?php echo base_url('transaksi/buku');?>",
-      data:'kode_buku='+$(this).attr("data_id"),
-      beforeSend: function(){
-        $("#result_buku").html("");
-        $("#result_tunggu_buku").html('<p style="color:green"><blink>tunggu sebentar</blink></p>');
-      },
-      success: function(html){
-        $("#result_buku").load("<?= base_url('transaksi/buku_list');?>");
-        $("#result_tunggu_buku").html('');
-      }
-    });
-  });
-  </script>
-    
-  <script>
-  // AJAX call for autocomplete 
-  $(document).ready(function(){
-    $("#buku-search").keyup(function(){
-      $.ajax({
-        type: "POST",
-        url: "<?php echo base_url('transaksi/buku');?>",
-        data:'kode_buku='+$(this).val(),
-        beforeSend: function(){
-          $("#result_tunggu_buku").html('<p style="color:green"><blink>tunggu sebentar</blink></p>');
-        },
-        success: function(html){
-          $("#result_buku").load("<?= base_url('transaksi/buku_list');?>");
-          $("#result_tunggu_buku").html('');
-        }
-      });
-    });
-  });
-  </script>
+	const btnAdd = $('#btn-add')
+	const kode_sewa = $('#kode_sewa')
+	const tanggal_sewa = $('#tanggal_sewa')
+	const lama_sewa = $('#lama_sewa')
+	const member_id = $('#member_id')
+	const kamera = $('#kamera')
+	const harga = $('#harga')
+	const kode_kamera = $('#kode_kamera')
+	const nama_kamera = $('#nama_kamera')
+	const diskon = $('#diskon')
+	const grandTotal = $('#grand-total')
+	const catatan = $('#catatan')
+	const tblCart = $('#tbl-cart')
+	const btnSave = $('#btn-save')
+	const btnUpdate = $('#btn-update')
+
+	$('#form-purchase').submit(function(e) {
+		e.preventDefault()
+		let penyewaan = {
+			tanggal_sewa: tanggal_sewa.val(),
+			member_id: member_id.val(),
+			lama_sewa: lama_sewa.val(),
+			kode_sewa: kode_sewa.val(),
+			diskon: diskon.val(),
+			catatan: catatan.val(),
+			total: $('#total-hidden').val(),
+			grand_total: $('#grand-total-hidden').val(),
+			kamera: $('input[name="kamera[]"]').map(function() {
+				return $(this).val()
+			}).get(),
+			harga: $('input[name="harga[]"]').map(function() {
+				return $(this).val()
+			}).get(),
+			lama: $('input[name="lama[]"]').map(function() {
+				return $(this).val()
+			}).get(),
+			subtotal: $('input[name="subtotal[]"]').map(function() {
+				return $(this).val()
+			}).get(),
+		}
+
+		// If
+		if (!tanggal_sewa.val()) {
+			tanggal_sewa.focus()
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'Tanggal Sewa tidak boleh kosong'
+			})
+		} else if (!lama_sewa.val() || lama_sewa.val() < 1) {
+			lama_sewa.focus()
+			lama_sewa.val('')
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'Lama sewa tidak boleh kosong dan minimal 1 Hari'
+			})
+		} else if (!member_id.val()) {
+			member_id.focus()
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'Member tidak boleh kosong'
+			})
+		} else {
+			$.ajax({
+				type: 'POST',
+				url: '<?= base_url() ?>transaksi/simpan',
+				data: penyewaan,
+				success: function(res) {
+					// console.log(res)
+					Swal.fire({
+						icon: 'success',
+						title: 'Simpan data',
+						text: 'Berhasil'
+					}).then(function() {
+						window.location = '<?= base_url() ?>transaksi'
+					})
+				},
+				error: function(xhr, status, error) {
+					Swal.fire({
+						icon: 'error',
+						title: 'Oops...',
+						text: 'Something went wrong!'
+					})
+				}
+			})
+		}
+	})
+
+	kamera.change(function() {
+		$.ajax({
+			url: '<?= base_url() ?>transaksi/getBarangById/' + $(this).val(),
+			type: "GET",
+			contentType: "application/json",
+			dataType: "json",
+			success: function(res) {
+				kode_kamera.val(res.kode_kamera)
+				nama_kamera.val(res.nama_kamera)
+			}
+		})
+	})
+
+	btnAdd.click(function() {
+		if (!tanggal_sewa.val()) {
+			tanggal_sewa.focus()
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'Tanggal Sewa tidak boleh kosong'
+			})
+		} else if (!lama_sewa.val() || lama_sewa.val() < 1) {
+			lama_sewa.focus()
+			lama_sewa.val('')
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'Lama sewa tidak boleh kosong dan minimal 1 Hari'
+			})
+		} else if (!member_id.val()) {
+			member_id.focus()
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'Member tidak boleh kosong'
+			})
+		} else if (!kamera.val()) {
+			kamera.focus()
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'Barang tidak boleh kosong'
+			})
+		} else if (!harga.val() || harga.val() < 1) {
+			harga.focus()
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'Harga Sewa/Hari tidak boleh kosong'
+			})
+		} else {
+			$('input[name="kamera[]"]').each(function() {
+				let index = $(this).parent().parent().index()
+				if ($(this).val() == kamera.val()) {
+					tblCart.find('tbody tr:eq(' + index + ')').remove()
+					generateNo()
+				}
+			})
+
+			let subtotal = harga.val() * lama_sewa.val()
+
+			tblCart.find('tbody').append(`
+                    <tr>
+                        <td>${tblCart.find('tbody tr').length + 1}</td>
+                        <td>
+                            ${kamera.find('option:selected').text()}
+                            <input type="hidden" class="kamera-hidden" name="kamera[]" value="${kamera.val()}">
+                        </td>
+                        <td>
+                            ${formatRibuan(harga.val())}
+                            <input type="hidden" class="harga-hidden" name="harga[]" value="${harga.val()}">
+                        </td>
+						<td>
+                            ${lama_sewa.val()} Hari
+                            <input type="hidden" class="lama-hidden" name="lama[]" value="${lama_sewa.val()}">
+                        </td>
+						<td>
+                            ${formatRibuan(subtotal)}
+                            <input type="hidden" class="subtotal-hidden" name="subtotal[]" value="${subtotal}">
+                        </td>
+                        <td>
+                            <button class="btn btn-warning btn-xs me-1 btn-edit" type="button">
+                                <i class="fa fa-edit"></i>
+                            </button>
+
+                            <button class="btn btn-danger btn-xs btn-delete" type="button">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `)
+			generateNo()
+			hitungTotal()
+			hitungDiskon()
+			clearForm()
+			cekTableLength()
+			kamera.focus()
+
+		}
+	})
+
+	btnUpdate.click(function() {
+		if (!tanggal_sewa.val()) {
+			tanggal_sewa.focus()
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'Tanggal Sewa tidak boleh kosong'
+			})
+		} else if (!lama_sewa.val() || lama_sewa.val() < 1) {
+			lama_sewa.focus()
+			lama_sewa.val('')
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'Lama sewa tidak boleh kosong dan minimal 1 Hari'
+			})
+		} else if (!member_id.val()) {
+			member_id.focus()
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'Member tidak boleh kosong'
+			})
+		} else if (!kamera.val()) {
+			kamera.focus()
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'Barang tidak boleh kosong'
+			})
+		} else if (!harga.val() || harga.val() < 1) {
+			harga.focus()
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'Harga Sewa/Hari tidak boleh kosong'
+			})
+		} else {
+			$('input[name="kamera[]"]').each(function() {
+				let index = $(this).parent().parent().index()
+				if ($(this).val() == kamera.val()) {
+					tblCart.find('tbody tr:eq(' + index + ')').remove()
+				}
+			})
+
+			let subtotal = harga.val() * lama_sewa.val()
+
+			tblCart.find('tbody').append(`
+                    <tr>
+                        <td>${tblCart.find('tbody tr').length + 1}</td>
+                        <td>
+                            ${kamera.find('option:selected').text()}
+                            <input type="hidden" class="kamera-hidden" name="kamera[]" value="${kamera.val()}">
+                        </td>
+                        <td>
+                            ${formatRibuan(harga.val())}
+                            <input type="hidden" class="harga-hidden" name="harga[]" value="${harga.val()}">
+                        </td>
+						<td>
+                            ${lama_sewa.val()} Hari
+                            <input type="hidden" class="lama-hidden" name=lama[]" value="${lama_sewa.val()}">
+                        </td>
+						<td>
+                            ${formatRibuan(subtotal)}
+                            <input type="hidden" class="subtotal-hidden" name="subtotal[]" value="${subtotal}">
+                        </td>
+                        <td>
+                            <button class="btn btn-warning btn-xs me-1 btn-edit" type="button">
+                                <i class="fa fa-edit"></i>
+                            </button>
+
+                            <button class="btn btn-danger btn-xs btn-delete" type="button">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `)
+			hitungTotal()
+			hitungDiskon()
+			clearForm()
+			cekTableLength()
+			generateNo()
+			kamera.focus()
+			btnUpdate.hide()
+			btnAdd.show()
+
+		}
+	})
+
+	$(document).on('click', '.btn-edit', function(e) {
+		e.preventDefault()
+		let index = $(this).parent().parent().index()
+
+		btnAdd.hide()
+		btnUpdate.show()
+		kamera.val($('.kamera-hidden:eq(' + index + ')').val())
+		lama_sewa.val($('.lama-hidden:eq(' + index + ')').val())
+		harga.val($('.harga-hidden:eq(' + index + ')').val())
+
+		$('#index-tr').val(index)
+	})
+
+	$(document).on('click', '.btn-delete', function(e) {
+		$(this).parent().parent().remove()
+		generateNo()
+		hitungTotal()
+		hitungDiskon()
+		cekTableLength()
+	})
+
+	function generateNo() {
+		let no = 1
+		tblCart.find('tbody tr').each(function() {
+			$(this).find('td:nth-child(1)').html(no)
+			no++
+		})
+	}
+
+	function clearForm() {
+		kode_kamera.val('')
+		kamera.val('')
+		nama_kamera.val('')
+		harga.val('')
+	}
+
+	function cekTableLength() {
+		let cek = tblCart.find('tbody tr').length
+
+		if (cek > 0) {
+			btnSave.prop('disabled', false)
+		} else {
+			btnSave.prop('disabled', true)
+		}
+	}
+
+	function hitungTotal() {
+		let xTotal = 0
+		$('input[name="subtotal[]"]').map(function() {
+			xTotal += parseInt($(this).val())
+		}).get()
+
+		$('#total').val(formatRibuan(xTotal))
+		$('#grand-total').val(formatRibuan(xTotal))
+
+		$('#grand-total-hidden').val(xTotal)
+		$('#total-hidden').val(xTotal)
+		getVal()
+
+	}
+
+	function getVal() {
+		var value = $("#grand-total-hidden").val();
+		if (value > 0){
+			$("#lama_sewa").prop("readonly",true);
+		}else{
+			$("#lama_sewa").prop("readonly",false);
+		}
+	}
+
+	function formatRibuan(number) {
+		return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+	}
+
+	function hitungDiskon() {
+		xTotal = parseInt($('#total-hidden').val())
+		xDiskon = (xTotal - parseInt($('#diskon').val()))
+
+		if (Number.isNaN(xDiskon)) {
+			grandTotal.val(formatRibuan(xTotal))
+			$('#grand-total-hidden').val(xTotal)
+		} else {
+			grandTotal.val(formatRibuan(xDiskon))
+
+			$('#grand-total-hidden').val(xDiskon)
+		}
+	}
+	diskon.on('change keyup', function() {
+		hitungDiskon()
+	})
+</script>

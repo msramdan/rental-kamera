@@ -27,12 +27,14 @@ class Kategori extends CI_Controller {
 			'nama_kategori' 	=>$this->input->post('nama_kategori',true),
 		);
 
-		$oke					=$this->M_kategori->TambahData($data); // variable content dan variable nama array harus sama 
+		$oke					=$this->M_kategori->TambahData($data);
+		$this->session->set_flashdata('oke', 'Ditambahkan');
 		redirect('kategori');
 	}
 
 	public function DataHapus($id){
-		$oke					=$this->M_kategori->delete($id); // variable content dan variable nama array harus sama 
+		$oke					=$this->M_kategori->delete($id);
+		$this->session->set_flashdata('oke', 'DiHapus');
 		redirect('kategori');
 	}
 
@@ -48,6 +50,7 @@ class Kategori extends CI_Controller {
 		);
 		$oke					=$this->M_kategori->Submit_edit_kategori($data,$id); // variable content dan variable nama array harus sama 
 		$this->load->view('body/dashboard',$oke);
+		$this->session->set_flashdata('oke', 'DiUpdate');
 		redirect('kategori');
 	}
 	
