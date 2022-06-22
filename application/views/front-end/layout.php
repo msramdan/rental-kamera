@@ -93,9 +93,9 @@
 					</div>
 					<div class="col-xs-12 col-sm-12 col-md-7 top-search-holder">
 						<div class="search-area">
-							<form action="https://olshop.ip-komputer.com/pencarian" method="GET">
+							<form action="<?= base_url() ?>web/pencarian" method="GET">
 								<div class="control-group">
-									<input required class="search-field typeahead" name="search" id="search" autocomplete="off" placeholder="Cari Barang" />
+									<input required class="search-field typeahead" name="search" id="search" autocomplete="off" <?php if (isset($_GET['search'])) { ?> value="<?= $_GET['search'] ?>" <?php } ?> placeholder="Cari Barang" />
 									<button type="submit" class="search-button">
 									</button>
 								</div>
@@ -103,8 +103,67 @@
 						</div>
 					</div>
 
+					<?php if ($this->session->userdata('webMemberId')) { ?>
+						<div class="col-xs-12 col-sm-12 col-md-2 animate-dropdown top-cart-row">
+							<div class="dropdown dropdown-cart">
+								<a href="#" class="dropdown-toggle lnk-cart" data-toggle="dropdown">
+									<div class="items-cart-inner">
+										<div class="basket">
+											<i class="glyphicon glyphicon-shopping-cart"></i>
+										</div>
+										<div class="basket-item-count"><span class="count"><?= $rows = count($this->cart->contents()); ?></span></div>
+										<div class="total-price-basket">
+											<span class="total-price">
+												<span class="value"> <?= rupiah($this->cart->total()) ; ?></span>
+											</span>
+										</div>
+									</div>
+								</a>
+								<ul class="dropdown-menu">
+									<li>
+										<div class="cart-item product-summary">
 
+											<?php foreach ($this->cart->contents() as $items) { ?>
+												<div class="row">
+													<div class="col-xs-4">
+														<div class="image">
+															<a href=""><img src="<?= base_url() ?>assets/admin/dist/img/kamera/<?php echo $items['options']['photo'] ?>" alt=""></a>
+														</div>
+													</div>
+													<div class="col-xs-7">
+														<h3 class="name"><a href=""><?php echo $items['name']; ?>
+															</a></h3>
+														<span><?php echo $items['qty']; ?> * <?php echo rupiah($items['price']); ?></span> = <span class="price"><?= rupiah($items['qty'] * $items['price']) ?></span>
+													</div>
+												</div>
+												<hr>
+											<?php } ?>
 
+										</div>
+										<div class="clearfix cart-total">
+											<?php if (count($this->cart->contents()) > 0) { ?>
+												<div class="pull-right">
+													<span class="text">Total Sewa :</span><span class='price'><?= rupiah($this->cart->total()) ; ?></span>
+												</div>
+												<div class="clearfix"></div>
+												<a href="<?= base_url() ?>web/cart" class="btn btn-upper btn-primary btn-block m-t-20">Checkout</a>
+
+												<form action="<?= base_url() ?>web/clear" method="POST">
+													<button class="btn btn-upper btn-danger btn-block m-t-10">Hapus Semua
+														Cart</button>
+												</form>
+											<?php } else { ?>
+												<div class="alert alert-danger">
+													<span>Cart Kosong !</span>
+												</div>
+												
+											<?php } ?>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					<?php } ?>
 				</div>
 
 			</div>
@@ -148,7 +207,9 @@
 		</div>
 	</footer>
 
-	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> -->
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js" integrity="sha512-qzrZqY/kMVCEYeu/gCm8U2800Wz++LTGK4pitW/iswpCbjwxhsmUwleL1YXaHImptCHG0vJwU7Ly7ROw3ZQoww==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script src="<?= base_url() ?>assets/fe/assets/js/bootstrap.min.js"></script>
 	<script src="<?= base_url() ?>assets/fe/assets/js/bootstrap-hover-dropdown.min.js"></script>
 	<script src="<?= base_url() ?>assets/fe/assets/js/owl.carousel.min.js"></script>
@@ -165,22 +226,16 @@
 	<script type="text/javascript" src="<?php echo base_url(); ?>assets/admin/js/sweetalert.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 	<script src="<?php echo base_url(); ?>assets/admin/js/dataflash.js"></script>
-
-	<script type="text/javascript">
-		var path = "autocomplete-search-query.json";
-		$('input.typeahead').typeahead({
-			source: function(query, process) {
-				return $.get(path, {
-					term: query
-				}, function(data) {
-					return process(data);
-				});
-			}
-		});
-	</script>
+	<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js" integrity="sha256-6XMVI0zB8cRzfZjqKcD01PBsAy3FlDASrlC8SxCpInY=" crossorigin="anonymous"></script>
 </body>
 
-
-<!-- Mirrored from olshop.ip-komputer.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 21 Jun 2022 16:48:11 GMT -->
-
 </html>
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#search").autocomplete({
+			source: "<?php echo site_url('web/get_autocomplete/?'); ?>"
+		});
+	});
+</script>

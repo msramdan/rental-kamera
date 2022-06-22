@@ -56,6 +56,7 @@ class Web extends CI_Controller
 
 	public function wishList()
 	{
+		$oke['wish'] = $this->M_web->wishList($this->session->userdata('webMemberId'));
 		$oke['content_page'] = "front-end/wishList";
 		$this->load->view('front-end/layout', $oke);
 	}
@@ -136,5 +137,156 @@ class Web extends CI_Controller
 		$this->M_member->ubah_data($data, $this->session->userdata('webMemberId'));
 		$this->session->set_flashdata('oke', 'Data akun berhasil di update');
 		redirect('web/akun');
+	}
+
+	public function addWishlist($id)
+	{
+		$session = $this->session->userdata('webMemberId');
+		if ($session  != null) {
+			$member_id = $this->session->userdata('webMemberId');
+			$jml = $this->db->get_where('wishList', array('id_kamera' => $id))->num_rows();
+			if ($jml > 0) {
+				$this->session->set_flashdata('oke', 'Item sudah ada di Wishlish');
+				redirect('web/wishList');
+			} else {
+				$this->db->query("INSERT INTO wishList (member_id,id_kamera) VALUES ($member_id,$id)");
+				$this->session->set_flashdata('oke', 'Item Wishlish berhasil ditambahkan');
+				redirect('web/wishList');
+			}
+		} else {
+			$this->session->set_flashdata('error', 'Silahkan login terlebih dahulu');
+			redirect('web/login');
+		}
+	}
+
+	public function doDeleteWish($id)
+	{
+		$this->M_web->doDeleteWish($id);
+		$this->session->set_flashdata('oke', 'Item Wishlish berhasil dihapus');
+		redirect('web/wishList');
+	}
+
+	function get_autocomplete()
+	{
+		if (isset($_GET['term'])) {
+			$result = $this->M_kamera->cari($_GET['term']);
+			if (count($result) > 0) {
+				foreach ($result as $row)
+					$arr_result[] = $row->nama_kamera;
+				echo json_encode($arr_result);
+			}
+		}
+	}
+	public function pencarian()
+	{
+		$nama_kamera = $_GET['search'];
+		$oke['kategori']	= $this->M_kategori->list_kategori();
+		$oke['kamera']	= $this->M_kamera->byName($nama_kamera);
+		$oke['nama_kamera']	= $nama_kamera;
+		$oke['jumlah']	=  $this->db->get_where('tbl_kamera', array('nama_kamera' => $nama_kamera))->num_rows();
+		$oke['content_page'] = "front-end/pencarian";
+		$this->load->view('front-end/layout', $oke);
+	}
+
+	public function cart()
+	{
+
+		$session = $this->session->userdata('webMemberId');
+		if ($session  != null) {
+			$oke['content_page'] = "front-end/cart";
+			$this->load->view('front-end/layout', $oke);
+		} else {
+
+			$this->session->set_flashdata('error', 'Silahkan login terlebih dahulu');
+			redirect('web/login');
+		}
+	}
+
+	public function addToCart()
+	{
+		$session = $this->session->userdata('webMemberId');
+		if ($session  != null) {
+			$id_kamera = $this->input->post('id_kamera');
+			$nama = $this->input->post('nama_kamera');
+			$harga = $this->input->post('harga');
+			$photo = $this->input->post('photo');
+			$data = array(
+				'id'      => $id_kamera,
+				'qty'     => 1,
+				'price'   => $harga,
+				'name'    => $nama,
+				'options' => array('photo' => $photo)
+			);
+
+			$this->cart->insert($data);
+			$this->session->set_flashdata('oke', 'Berhasil ditambahkan ke cart');
+			redirect('web/cart');
+		} else {
+
+			$this->session->set_flashdata('error', 'Silahkan login terlebih dahulu');
+			redirect('web/login');
+		}
+	}
+
+	// dell all data in cart
+	function clear()
+	{
+		$this->load->library("cart");
+		$this->cart->destroy();
+		$this->session->set_flashdata('oke', 'Semua Data dalam cart berhasil dihapus');
+		redirect('');
+	}
+	public function remove_cart($rowid)
+	{
+		$removed_cart = array(
+			'rowid'         => $rowid,
+			'qty'           => 0
+		);
+		$this->cart->update($removed_cart);
+		$this->session->set_flashdata('oke', 'Data dalam cart berhasil dihapus');
+		redirect('web/cart');
+	}
+
+	public function update_cart()
+	{
+		$qty = $this->input->post('qty');
+		$rowid = $this->input->post('rowid');
+		$update = array(
+			'rowid'         => $rowid,
+			'qty'           => $qty
+		);
+		$this->cart->update($update);
+
+		$this->session->set_flashdata('oke', 'Lama sewa berhasil di update');
+		redirect('web/cart');
+	}
+
+	public function proses()
+	{
+		$data = array(
+			'kode_sewa' 	=> $this->M_transaksi->buat_kode(),
+			'tanggal_req' 	=> date('Y-m-d'),
+			'member_id' 	=> $this->session->userdata('webMemberId'),
+			'grand_total' 	=> $this->cart->total(),
+		);
+		$this->db->insert('tbl_sewa', $data);
+		$id = $this->db->insert_id();
+
+		// detail sewa
+		foreach ($this->cart->contents() as $items) {
+			$detail = array(
+				'sewa_id' 	=> $id,
+				'kamera_id' 	=> $items['id'],
+				'harga' 	=> $items['price'],
+				'total' 	=> $items['price'] * $items['qty'],
+				'lama_sewa' 	=> $items['qty']
+			);
+			$this->db->insert('tbl_sewa_detail', $detail);
+		}
+		// hapus data cart
+		// $this->load->library("cart");
+		$this->cart->destroy();
+		$this->session->set_flashdata('oke', 'Permintaan penyewaan sudah terkirim, silahkan datang ke studio untuk verifikasi data, bayar uang sewa dan ambil barang sewa');
+		redirect('');
 	}
 }

@@ -187,7 +187,7 @@
 									<th>No</th>
 									<th>Kode Sewa</th>
 									<th>Nama Penyewa</th>
-									<th>Tanggal Sewa</th>
+									<!-- <th>Tanggal Sewa</th> -->
 								</tr>
 							</thead>
 							<?php $no = 1; ?>
@@ -199,7 +199,7 @@
 									<td><?php echo $no++; ?></td>
 									<td><?php echo $value->kode_sewa ?></td>
 									<td><?php echo $value->nama_member ?></td>
-									<td><?php echo $value->tanggal_sewa ?></th>
+									<!-- <td><?php echo $value->tanggal_sewa ?></th> -->
 								</tr>
 							<?php } ?>
 								
@@ -216,28 +216,25 @@
 
 <?php 
 // total all
-$query=$this->db->query('SELECT * FROM tbl_sewa');
+$query=$this->db->query('SELECT * FROM tbl_sewa_detail where tanggal_sewa Is NOT null');
 $totalAll = $query->num_rows();
 
-
 // total belum
-$query=$this->db->query('SELECT * FROM tbl_sewa where tanggal_kembali Is null');
+$query=$this->db->query('SELECT * FROM tbl_sewa_detail where tanggal_kembali Is null and tanggal_sewa Is NOT null');
 $totalBelum = $query->num_rows();
-if ($totalAll !=0){
-	$persentaseBelum = (0 /  0) * 100;
-}else{
-	$persentaseBelum=0;
-}
+$persentaseBelum=$totalBelum;
+
 
 // total Sudah
-$query=$this->db->query('SELECT * FROM tbl_sewa where tanggal_kembali Is NOT null');
+$query=$this->db->query('SELECT * FROM tbl_sewa_detail where tanggal_kembali Is NOT null and tanggal_sewa Is NOT null');
 $totalSudah= $query->num_rows();
+$persentaseSudah=$totalSudah;
 
-if ($totalAll !=0){
-	$persentaseSudah = (0 /  0) *100;
-}else{
-	$persentaseSudah=0;
-}
+
+// var_dump($totalAll);
+// var_dump($totalBelum);
+// var_dump($totalSudah);
+// die();
 ?>
 
 <script>

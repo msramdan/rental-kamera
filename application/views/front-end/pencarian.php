@@ -29,20 +29,16 @@
 				</div>
 			</div>
 			<div class='col-md-9'>
-				<div id="category" class="category-carousel hidden-xs">
-					<div class="item">
-						<div class="image">
-							<img src="<?= base_url() ?>assets/fe/assets/images/banners/banner.jpg" alt="" class="img-responsive">
-						</div>
-					</div>
-				</div>
 				<div class="search-result-container ">
 					<div id="myTabContent" class="tab-content category-list">
 						<div class="tab-pane active " id="grid-container">
 							<div class="category-product">
 								<div class="row">
+									<p style="padding:10px">Menampilkan <?= $jumlah ?> barang pencarian <b><?= $nama_kamera ?></b></p>
+									<hr>
 									<?php foreach ($kamera as $rows) { ?>
 										<form action="<?= base_url() ?>web/addToCart" method="POST" enctype="multipart/form-data">
+											<input type="hidden" name="_token" value="ktGsrOWJxlvh3FdsjlQLeryqfUgYZe16LkDg2BHY">
 											<div class="col-sm-6 col-md-4 wow fadeInUp animated" style="visibility: visible; animation-name: fadeInUp;">
 												<div class="products">
 													<div class="product">
@@ -72,7 +68,7 @@
 																		<input type="hidden" value="<?php echo $rows['nama_kamera']; ?>" name="nama_kamera">
 																		<input type="hidden" value="<?php echo $rows['harga']; ?>" name="harga">
 																		<input type="hidden" value="<?= $rows['photo'] ?>" name="photo">
-																		<button type="submit" class="btn btn-primary icon"><i class="fa fa-shopping-cart"></i>
+																		<button class="btn btn-primary icon"><i class="fa fa-shopping-cart"></i>
 																		</button>
 																	</li>
 																	<li class="lnk wishlist">

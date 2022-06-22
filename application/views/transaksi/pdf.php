@@ -9,7 +9,7 @@
                 border-collapse: collapse;
                 width: 100%;
                 font-size: 12px;
-                text-align: center;
+                text-align: left;
                 /* line-height: 10px */
             }
 
@@ -34,86 +34,59 @@
 		<hr >
 	</center>
 
-	<table id="table" style="margin-top:10px;">
+	<table id="table" style="margin-top:10px;" class="table-sm">
 			<tr>
-				<th>No</th>
+			<th>No</th>
 				<th>Kode Sewa</th>
 				<th>Member</th>
+				<th>Grand Total</th>
+				<th>Tanggal Request</th>
 				<th>Tanggal Sewa</th>
-				<th>Lama Sewa</th>
-				<th>Tanggal di Kembali</th>
-				<th>Status Pengembelian</th>
-				<th><span style="color: red;">Keterlambatan</span> </th>
-				<th><span style="color: red;">Denda</span> </th>
+				<th>User Approved</th>
+				<th>Status Pengembalian</th>
+				<th>Item Disewa</th>
 			</tr>
-			<?php $no = 1;
+			<?php $loop = 1;
 			$denda = $this->db->query("SELECT * FROM tbl_biaya_denda WHERE id_biaya_denda  = 1");
 			$dataDenda = $denda->row();
 			$valueDenda = $dataDenda->harga_denda;
 			?>
 			<?php foreach ($transaksi as $rows) { ?>
 				<tr>
-					<td><?php echo $no; ?></td>
-					<td><?php echo $rows['kode_sewa']; ?></td>
-					<td><?php echo $rows['nama_member']; ?></td>
-					<!-- tanggal seharus nya di kembalikan -->
-
-					<?php
-					$tgl1    = $rows['tanggal_sewa'];
-					$lama = $rows['lama_sewa'];
-					$x = '+' . $lama . ' days';
-					$tanggalHarusKembali    = date('Y-m-d', strtotime($x, strtotime($tgl1)));
+					<td style="width: 5%;"><?php echo $loop; ?></td>
+					<td style="width: 5%;"><?php echo $rows['kode_sewa']; ?></td>
+					<td style="width: 10%;"><?php echo $rows['nama_member']; ?></td>
+					<td style="width: 10%;"><?php echo rupiah($rows['grand_total']); ?></td>
+					<td style="width: 10%;"> <?php echo $rows['tanggal_req']; ?></td>
+					<td style="width: 10%;"><?php echo $rows['tanggal_sewa']; ?></td>
+					<td style="width: 10%;"><?php echo $rows['username']; ?></td><?php
+					$sewa_id = $rows['sewa_id'];
+					$cekJml = $this->db->query("SELECT * from tbl_sewa_detail where tanggal_kembali IS null and sewa_id='$sewa_id'")->num_rows();
 					?>
-					<td><?php echo $rows['tanggal_sewa']; ?> s.d <span style="color: red;"><?= $tanggalHarusKembali ?></span> </td>
-					<td><?php echo $rows['lama_sewa']; ?> Hari</td>
-
-					<?php if ($rows['tanggal_kembali'] == null) { ?>
-						<td>-</td>
-						<td>Belum Di Kembalikan</td>
+					<?php if ($rows['tanggal_sewa'] == '' || $rows['tanggal_sewa'] == null) { ?>
+						<td style="width: 20%;"></td>
 					<?php } else { ?>
-						<td><?php echo $rows['tanggal_kembali']; ?></td>
-						<td>Sudah Di Kembalikan</td>
+						<?php if ($cekJml > 0) { ?>
+							<td style="width: 20%;">Ada <?= $cekJml ?> Barang Belum dikembalikan</td>
+						<?php } else { ?>
+							<td style="width: 20%;">Semua barang sudah dikembalikan</td>
+						<?php } ?>
 					<?php } ?>
-
-					<!-- <td><?php echo $rows['total']; ?></td>
-					<td><?php echo $rows['diskon']; ?></td>
-					<td><?php echo $rows['grand_total']; ?></td> -->
-
-					<?php
-					$dateNow = date('Y-m-d');
-					$cek = $tanggalHarusKembali < $dateNow;
-
-					if ($rows['tanggal_kembali'] == null && $tanggalHarusKembali < $dateNow) { ?>
-						<!-- belum di kembalikan sampai today -->
-						<!-- hitang keterlambatan dan denda -->
+					<td>
 						<?php
-						$tgl1 = strtotime($tanggalHarusKembali);
-						$tgl2 = strtotime($dateNow);
-						$jarak = $tgl2 - $tgl1;
-						$keterlambatanHari = $jarak / 60 / 60 / 24;
+						$sewa_id = $rows['sewa_id'];
+						$no =1;
+						$detail = $this->db->query("Select *,tbl_kamera.nama_kamera from tbl_sewa_detail join tbl_kamera on tbl_kamera.id_kamera = tbl_sewa_detail.kamera_id where sewa_id='$sewa_id'")->result();
+						foreach ($detail as $value) {
+							echo '<pre>' .$no ++.'. ' .$value->nama_kamera. '<br>Lama Sewa : '.$value->lama_sewa.' Hari
+							<br>Harga/hari : '.rupiah($value->harga).'
+							<br>Sub Total : '.rupiah($value->total).'
+							</pre>';
+						}
 						?>
-						<td><?= $keterlambatanHari ?> Hari</td>
-						<td><?= $keterlambatanHari * $valueDenda  ?></td>
-					<?php } else if ($rows['tanggal_kembali'] != null && $tanggalHarusKembali < $rows['tanggal_kembali']) { ?>
-						<!-- sudah di kembalikan tapi terlambat -->
-						<?php
-						$tgl1 = strtotime($tanggalHarusKembali);
-						$tgl2 = strtotime($rows['tanggal_kembali']);
-						$jarak = $tgl2 - $tgl1;
-						$keterlambatanHari = $jarak / 60 / 60 / 24;
-						?>
-						<td><?= $keterlambatanHari ?> Hari</td>
-						<td><?= $keterlambatanHari * $valueDenda  ?></td>
-					<?php } else if ($rows['tanggal_kembali'] != null && $tanggalHarusKembali >= $rows['tanggal_kembali']) { ?>
-						<!-- sudah di kembalikan tapi tepat waktu -->
-						<td>Tidak Ada Keterlambatan</td>
-						<td>Tidak Ada Denda</td>
-					<?php } else { ?>
-						<td>-</td>
-						<td>-</td>
-					<?php } ?>
+					</td>
 				</tr>
-				<?php $no++ ?>
+				<?php $loop++ ?>
 			<?php } ?>
 	
 

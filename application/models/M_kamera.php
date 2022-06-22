@@ -18,6 +18,18 @@ class M_kamera extends CI_Model
 			$this->db->order_by("id_kamera","desc");
 			return $this->db->get()->result_array();
 	}
+
+	public function byName($nama_kamera =null){
+		$result=array();
+		$this->db->select('*');
+		$this->db->from('tbl_kamera');
+		$this->db->join('tbl_kategori', 'tbl_kategori.id_kategori = tbl_kamera.id_kategori');
+		if ($nama_kamera != null) {
+			$this->db->where('tbl_kamera.nama_kamera', $nama_kamera);
+		}
+		$this->db->order_by("id_kamera","desc");
+		return $this->db->get()->result_array();
+}
 	public function list_kamera_home(){
 			$result=array();
 			$this->db->select('*');
@@ -70,5 +82,17 @@ class M_kamera extends CI_Model
 		$kodejadi = "".$kodemax;    // hasilnya ODJ-9921-0001 dst.
 		return $kodejadi; 
 	}
+
+	function cari($kode){
+        $this->db->like('nama_kamera', $kode , 'both');
+        return $this->db->get('tbl_kamera')->result();
+    }
+
+	// function search_blog($title){
+    //     $this->db->like('blog_title', $title , 'both');
+    //     $this->db->order_by('blog_title', 'ASC');
+    //     $this->db->limit(10);
+    //     return $this->db->get('blog')->result();
+    // }
 
 }

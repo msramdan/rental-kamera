@@ -11,9 +11,9 @@ class M_transaksi extends CI_Model
 	public function tampil_transaksi($id = null)
 	{
 		$result = array();
-		$this->db->select('*');
+		$this->db->select('*,users.username,tbl_member.nama_member');
 		$this->db->from('tbl_sewa');
-		$this->db->join('users', 'users.anggota_id = tbl_sewa.users_id');
+		$this->db->join('users', 'users.anggota_id = tbl_sewa.users_id','left');
 		$this->db->join('tbl_member', 'tbl_member.member_id = tbl_sewa.member_id');
 		if ($id != null) {
 			$this->db->where('tbl_sewa.member_id', $id);
@@ -25,12 +25,12 @@ class M_transaksi extends CI_Model
 	public function laporanPdf($tgl_awal, $tgl_akhir)
 	{
 		$result = array();
-		$this->db->select('*');
+		$this->db->select('*,users.username,tbl_member.nama_member');
 		$this->db->from('tbl_sewa');
-		$this->db->join('users', 'users.anggota_id = tbl_sewa.users_id');
+		$this->db->join('users', 'users.anggota_id = tbl_sewa.users_id','left');
 		$this->db->join('tbl_member', 'tbl_member.member_id = tbl_sewa.member_id');
-		$this->db->where('tanggal_sewa >=', $tgl_awal);
-		$this->db->where('tanggal_sewa <=', $tgl_akhir);
+		$this->db->where('tanggal_req >=', $tgl_awal);
+		$this->db->where('tanggal_req <=', $tgl_akhir);
 		$this->db->order_by("tbl_sewa.sewa_id", "desc");
 		return $this->db->get()->result_array();
 	}
