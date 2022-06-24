@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Waktu pembuatan: 22 Jun 2022 pada 23.06
+-- Waktu pembuatan: 24 Jun 2022 pada 14.58
 -- Versi server: 5.7.33
--- Versi PHP: 7.4.19
+-- Versi PHP: 8.0.18
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -86,7 +86,10 @@ INSERT INTO `history_karyawan` (`id`, `nama`, `info`, `tanggal`) VALUES
 (575, 'admin', 'admin Telah melakukan login', '23/06/2022 04:18:53'),
 (576, 'admin', 'admin Telah melakukan login', '23/06/2022 05:34:25'),
 (577, 'admin', 'admin Telah melakukan login', '23/06/2022 05:42:59'),
-(578, 'admin', 'admin Telah melakukan login', '23/06/2022 05:43:18');
+(578, 'admin', 'admin Telah melakukan login', '23/06/2022 05:43:18'),
+(579, 'admin', 'admin Telah melakukan login', '23/06/2022 23:14:29'),
+(580, 'admin', 'admin Telah melakukan login', '23/06/2022 23:16:04'),
+(581, 'admin', 'admin Telah melakukan login', '23/06/2022 23:36:02');
 
 -- --------------------------------------------------------
 
@@ -134,7 +137,9 @@ INSERT INTO `tbl_kamera` (`id_kamera`, `kode_kamera`, `id_kategori`, `nama_kamer
 (8, 'KA0005', 9, 'Lensa Kamera Epson', 'Magnam sit pariatur', 100, 1000, 'item-220622-73354c7482.jpg'),
 (9, 'KA0006', 7, 'Ea in quibusdam est ', 'Exercitationem duis ', 100, 8000, 'item-220622-65a1dc4f08.jpg'),
 (10, 'KA0007', 8, 'Totam sint sed vero', 'Culpa quibusdam volu', 0, 96, 'item-220622-3e1ebda376.png'),
-(11, 'KA0008', 8, 'Itaque alias tempori', 'Cupiditate et eum vo', 0, 81, 'item-220622-f6fd11a9d1.png');
+(11, 'KA0008', 8, 'Itaque alias tempori', 'Cupiditate et eum vo', 0, 81, 'item-220622-f6fd11a9d1.png'),
+(12, 'KA0009', 8, 'Camera YYY', 'XXXXXXXXXXXXXXXXX', 100, 90000, 'item-220623-59902729c8.jpg'),
+(13, 'KA0010', 10, 'Lampu', 'xxxxxxxxxxxxx', 100, 20000, 'item-220623-6bcedfe730.jpg');
 
 -- --------------------------------------------------------
 
@@ -154,7 +159,8 @@ CREATE TABLE `tbl_kategori` (
 INSERT INTO `tbl_kategori` (`id_kategori`, `nama_kategori`) VALUES
 (7, 'Lensa'),
 (8, 'Kamera'),
-(9, 'Aksesoris');
+(9, 'Aksesoris'),
+(10, 'Lighting');
 
 -- --------------------------------------------------------
 
@@ -178,7 +184,8 @@ CREATE TABLE `tbl_member` (
 --
 
 INSERT INTO `tbl_member` (`member_id`, `username`, `ktp`, `nama_member`, `jk_kelamin`, `no_hp`, `alamat`, `password`) VALUES
-(8, '1234', '123456789', 'Muhammad Saeful Ramdan', 'Laki-Laki', '083874731480', 'Bogor', '81dc9bdb52d04dc20036dbd8313ed055');
+(8, '1234', '123456789', 'Muhammad Saeful Ramdan', 'Laki-Laki', '083874731480', 'Bogor', '81dc9bdb52d04dc20036dbd8313ed055'),
+(9, '9090', '123456789', 'Muhammad Saeful Ramdan', 'Laki-Laki', '083874731480', 'Bogor', '38f629170ac3ab74b9d6d2cc411c2f3c');
 
 -- --------------------------------------------------------
 
@@ -201,7 +208,8 @@ CREATE TABLE `tbl_sewa` (
 --
 
 INSERT INTO `tbl_sewa` (`sewa_id`, `kode_sewa`, `member_id`, `tanggal_req`, `tanggal_sewa`, `users_id`, `grand_total`) VALUES
-(59, 'SW0001', 8, '2022-06-23', NULL, NULL, 81);
+(60, 'SW0001', 9, '2022-06-23', '2022-06-23', 2, 468000),
+(61, 'SW0002', 9, '2022-06-01', '2022-06-02', 2, 180000);
 
 -- --------------------------------------------------------
 
@@ -225,7 +233,10 @@ CREATE TABLE `tbl_sewa_detail` (
 --
 
 INSERT INTO `tbl_sewa_detail` (`sewa_detail_id`, `sewa_id`, `kamera_id`, `harga`, `total`, `tanggal_sewa`, `lama_sewa`, `tanggal_kembali`) VALUES
-(86, 59, 11, 81, 81, NULL, 1, NULL);
+(87, 60, 12, 90000, 450000, '2022-06-23', 5, '2022-06-23'),
+(88, 60, 8, 1000, 2000, '2022-06-23', 2, '2022-06-23'),
+(89, 60, 9, 8000, 16000, '2022-06-23', 2, '2022-06-23'),
+(90, 61, 12, 90000, 180000, '2022-06-02', 2, '2022-06-23');
 
 -- --------------------------------------------------------
 
@@ -336,7 +347,7 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT untuk tabel `history_karyawan`
 --
 ALTER TABLE `history_karyawan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=579;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=582;
 
 --
 -- AUTO_INCREMENT untuk tabel `tbl_biaya_denda`
@@ -348,31 +359,31 @@ ALTER TABLE `tbl_biaya_denda`
 -- AUTO_INCREMENT untuk tabel `tbl_kamera`
 --
 ALTER TABLE `tbl_kamera`
-  MODIFY `id_kamera` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_kamera` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT untuk tabel `tbl_kategori`
 --
 ALTER TABLE `tbl_kategori`
-  MODIFY `id_kategori` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_kategori` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT untuk tabel `tbl_member`
 --
 ALTER TABLE `tbl_member`
-  MODIFY `member_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `member_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT untuk tabel `tbl_sewa`
 --
 ALTER TABLE `tbl_sewa`
-  MODIFY `sewa_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `sewa_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT untuk tabel `tbl_sewa_detail`
 --
 ALTER TABLE `tbl_sewa_detail`
-  MODIFY `sewa_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
+  MODIFY `sewa_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
@@ -384,7 +395,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT untuk tabel `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `wishlist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `wishlist_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
